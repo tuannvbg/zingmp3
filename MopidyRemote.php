@@ -38,7 +38,7 @@ class MopidyRemote
         curl_setopt($this->_curl, CURLOPT_POSTFIELDS, $paramsStr);
         curl_setopt($this->_curl, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
-            'Content-Length: ' . strlen($paramsStr)));
+            'Content-Length: '.strlen($paramsStr)));
 
         $result = curl_exec($this->_curl);
         file_put_contents('/tmp/slackpi', $result);
@@ -67,14 +67,14 @@ class MopidyRemote
     public function next()
     {
         $params = $this->_createParam();
-        $params['method'] = 'core . playback . next';
+        $params['method'] = 'core.playback.next';
         $this->_exec($params);
     }
 
     public function play()
     {
         $params = $this->_createParam();
-        $params['method'] = 'core . playback . play';
+        $params['method'] = 'core.playback.play';
         $params['params'] = [
         ];
         $this->_exec($params);
@@ -84,7 +84,7 @@ class MopidyRemote
     public function clear()
     {
         $params = $this->_createParam();
-        $params['method'] = 'core . tracklist . clear';
+        $params['method'] = 'core.tracklist.clear';
         $this->_exec($params);
     }
 
