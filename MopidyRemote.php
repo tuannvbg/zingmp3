@@ -61,7 +61,7 @@ class MopidyRemote
         $params['params'] = [
             'uri' => $data['url']
         ];
-
+        $this->_exec($params);
     }
 
     public function next()
