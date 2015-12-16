@@ -1,6 +1,10 @@
 <?php
 
-class ZingParser
+namespace App\Parser;
+
+require_once 'ParserAbstract.php';
+
+class Zingmp3 extends ParserAbstract
 {
 
     public function match($text)
@@ -14,7 +18,7 @@ class ZingParser
     {
 
         $url = preg_replace('/.*(http:\/\/mp3\.zing\.vn\/bai\-hat\/.*\.html).*/i', "$1", $url);
-        $page = $this->getGzipLink($url);
+        $page = $this->getLink($url, $gzip=true);
 
         $pattern = 'xmlURL=(http:\/\/mp3\.zing\.vn\/xml\/song\-xml\/[a-zA-Z0-9]+)';
         $matches = [];
@@ -24,7 +28,7 @@ class ZingParser
 
         if ($result) {
 
-            $page = $this->getGzipLink($matches[1]);
+            $page = $this->getLink($matches[1], $gzip=true);
 
             $pattern = '\<source\>\<\!\[CDATA\[(.*)\]\]\>\<\/source\>';
             preg_match("/$pattern/", $page, $matches);
@@ -44,19 +48,5 @@ class ZingParser
 
     }
 
-    public function getGzipLink($url)
-    {
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_ENCODING, "gzip");
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-        $output = curl_exec($ch);
-        curl_close($ch);
-
-        return $output;
-
-    }
 
 }

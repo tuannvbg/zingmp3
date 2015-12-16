@@ -1,5 +1,4 @@
 <?php
-require_once 'lib/ZingParser.php';
 require_once 'lib/MopidyRemote.php';
 
 define('BOT_PREFIX', 'slackpibot: ');
@@ -9,8 +8,6 @@ $params = $_REQUEST;
 $text = isset($params['text']) ? $params['text'] : '';
 
 $remote = new MopidyRemote();
-
-$parser = new ZingParser();
 
 $responseText = '';
 
@@ -53,14 +50,23 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
             $responseText = $remote->listTracks();
             break;
         default:
-            if ($parser->match($text)) {
-                $mediaData = $parser->getMedia($text);
-                $remote->add($mediaData);
+            $parserList = ['Zingmp3', 'Nhaccuatui'];
+            foreach ($parserList as $parserName) {
+                require_once "lib/Parser/${parserName}.php";
+                $className = "App\\Parser\\"."$parserName";
+                $parser = new $className;
+                if ($parser->match($text)) {
+                    $mediaData = $parser->getMedia($text);
+                    $remote->add($mediaData);
 
-                $responseText = "Received";
-                if ($mediaData['title'] != '') $responseText .= ': '.$mediaData['title'];
-            } else {
-                // Just ignore unkown command
+                    $responseText = "Received";
+                    if ($mediaData['title'] != '') $responseText .= ': '.$mediaData['title'];
+
+                    break;
+                } else {
+                    // Just ignore unkown command
+                }
+
             }
     }
 } 
