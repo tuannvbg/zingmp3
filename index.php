@@ -14,6 +14,7 @@ $parser = new ZingParser();
 
 $responseText = '';
 
+
 if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
     switch ($text) {
         case 'help':
@@ -35,6 +36,10 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
         case 'clear':
             $remote->clear();
             $responseText = 'Empty!';
+            break;
+        case 'current':
+        case 'now':
+            $responseText = 'Current track: '. $remote->getCurrent();
             break;
         case 'list':
             $responseText = $remote->listTracks();

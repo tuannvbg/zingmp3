@@ -97,26 +97,44 @@ class MopidyRemote
         $responseText = "";
         $data = [];
         foreach ($responseData['result'] as $item) {
-            $name = isset($item['name'])?$item['name']:'Unknown';
-            
-            // Add artists info to name
-            if (isset($item['artists'])) {
-                $artists = [];
-                foreach ($item['artists'] as $a) {
-                    $artists[] = $a['name'];
-                }
-
-                if (count($artists)>0) {
-                    $artistInfo = implode(', ', $artists);
-                    $name .= $artistInfo;
-                }
-                
-            }
+            $name = $this->_getTrackName($item);
 
             $data[] = $name;
         }
 
         return implode("\n", $data);
+    }
+
+    public function getCurrent() {
+        $params = $this->_createParam();
+        $params['method'] = 'core.playback.get_current_tl_track';
+        $response = $this->_exec($params);
+
+        $responseData = json_decode($response, 1);
+        $name = $this->_getTrackName($responseData['result']['track']);
+
+        return $name;
+    }
+    /**
+    * 
+    */
+    protected function _getTrackName($track) {
+        $name = isset($track['name'])?$track['name']:'Unknown';
+        // Add artists info to name
+        if (isset($track['artists'])) {
+            $artists = [];
+            foreach ($track['artists'] as $a) {
+                $artists[] = $a['name'];
+            }
+
+            if (count($artists)>0) {
+                $artistInfo = implode(', ', $artists);
+                $name .= $artistInfo;
+            }
+            
+        }
+
+        return $name;
     }
 
 }
