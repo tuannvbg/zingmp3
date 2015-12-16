@@ -16,7 +16,10 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
     switch ($text) {
         case 'help':
         case '?':
-            $responseText = 'help, ?, now, next, play, stop, list, (link Zing MP3)';
+            $responseText = "
+                Info: help, ?, now/current, list\n
+                Playback: next, play, stop, pause, resume\n
+                Supported links: ZingMP3, Nhaccuatui";
             break;
         case 'next':
             $remote->next();
