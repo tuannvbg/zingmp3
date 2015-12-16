@@ -1,6 +1,6 @@
 <?php
-require_once 'ZingParser.php';
-require_once 'MopidyRemote.php';
+require_once 'lib/ZingParser.php';
+require_once 'lib/MopidyRemote.php';
 
 define('BOT_PREFIX', 'slackpibot: ');
 

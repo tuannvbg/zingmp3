@@ -75,8 +75,7 @@ class MopidyRemote
     {
         $params = $this->_createParam();
         $params['method'] = 'core.playback.play';
-        $params['params'] = [
-        ];
+        $params['params'] = [];
         $this->_exec($params);
 
     }
@@ -98,12 +97,9 @@ class MopidyRemote
         $responseText = "";
         $data = [];
         foreach ($responseData['result'] as $item) {
-            // if (isset($item['track']))
-            //     $track = $item['track'];
-            // else 
-            //     {var_dump($item);die;}
             $name = isset($item['name'])?$item['name']:'Unknown';
             
+            // Add artists info to name
             if (isset($item['artists'])) {
                 $artists = [];
                 foreach ($item['artists'] as $a) {
