@@ -122,8 +122,6 @@ class MopidyRemote
     {
         $paramsStr = json_encode($params);
 
-        var_dump($params);
-
         curl_setopt($this->_curl, CURLOPT_POSTFIELDS, $paramsStr);
         curl_setopt($this->_curl, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
