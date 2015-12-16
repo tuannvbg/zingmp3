@@ -88,5 +88,40 @@ class MopidyRemote
         $this->_exec($params);
     }
 
+    public function listTracks() {
+        $params = $this->_createParam();
+        $params['method'] = 'core.tracklist.get_tracks';
+        $response = $this->_exec($params);
+
+        $responseData = json_decode($response, 1);
+
+        $responseText = "";
+        $data = [];
+        foreach ($responseData['result'] as $item) {
+            // if (isset($item['track']))
+            //     $track = $item['track'];
+            // else 
+            //     {var_dump($item);die;}
+            $name = isset($item['name'])?$item['name']:'Unknown';
+            
+            if (isset($item['artists'])) {
+                $artists = [];
+                foreach ($item['artists'] as $a) {
+                    $artists[] = $a['name'];
+                }
+
+                if (count($artists)>0) {
+                    $artistInfo = implode(', ', $artists);
+                    $name .= $artistInfo;
+                }
+                
+            }
+
+            $data[] = $name;
+        }
+
+        return implode("\n", $data);
+    }
+
 }
 
