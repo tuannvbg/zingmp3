@@ -30,12 +30,12 @@ class Nhaccuatui extends ParserAbstract
 
             $page = $this->getLink($matches[1], $gzip=true);
 
-            $pattern = '<location>\s*<\!\[\CDATA\[(.*)\]>\s*<\/location>';
+            $pattern = '<location>\s*<\!\[\CDATA\[(.*)\]\]>\s*<\/location>';
             preg_match("/$pattern/", $page, $matches);
 
             $url = $matches[1];
 
-            $pattern = '<title>\s*<\!\[\CDATA\[(.*)\]>\s*<\/title>';
+            $pattern = '<title>\s*<\!\[\CDATA\[(.*)\]\]>\s*<\/title>';
             preg_match("/$pattern/", $page, $matches);
             $title = $matches[1];
 
