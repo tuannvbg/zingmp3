@@ -19,7 +19,7 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
     switch ($text) {
         case 'help':
         case '?':
-            $responseText = 'help, ?, next, play, stop, list, (link Zing MP3)';
+            $responseText = 'help, ?, now, next, play, stop, list, (link Zing MP3)';
             break;
         case 'next':
             $remote->next();
@@ -29,13 +29,21 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
             $remote->play();
             $responseText = 'Ok!';
             break;
+        case 'pause':
+            $remote->pause();
+            $responseText = 'Ok!';
+            break;
+        case 'resume':
+            $remote->resume();
+            $responseText = 'Ok!';
+            break;
         case 'stop':
             $remote->stop();
             $responseText = 'Shhh!';
             break;
         case 'clear':
             $remote->clear();
-            $responseText = 'Empty!';
+            $responseText = 'Clean & Clear!';
             break;
         case 'current':
         case 'now':
