@@ -6,6 +6,7 @@ define('BOT_PREFIX', 'slackpibot: ');
 
 $params = $_REQUEST;
 $text = isset($params['text']) ? $params['text'] : '';
+$userName = isset($params['user_name']) ? $params['user_name'] : '';
 
 $remote = new MopidyRemote();
 
@@ -62,8 +63,8 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
                     $mediaData = $parser->getMedia($text);
                     $remote->add($mediaData);
 
-                    $responseText = "Received";
-                    if ($mediaData['title'] != '') $responseText .= ': '.$mediaData['title'];
+                    $responseText = "@$userName: Đã nhận hàng";
+                    if ($mediaData['title'] != '') $responseText .= ' "'.$mediaData['title'].'" :ok_hand:';
 
                     break;
                 } else {
