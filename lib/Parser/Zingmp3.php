@@ -10,7 +10,6 @@ class Zingmp3 extends ParserAbstract
     public function match($text)
     {
         $result = strpos($text, 'http://mp3.zing.vn/bai-hat/');
-
         return $result !== FALSE;
     }
 
@@ -39,8 +38,8 @@ class Zingmp3 extends ParserAbstract
             $title = $matches[1];
 
             return [
-                'title' => $title,
-                'url' => $url
+                'title' => trim($title),
+                'url' => trim($url)
             ];
         } else {
             return FALSE;
