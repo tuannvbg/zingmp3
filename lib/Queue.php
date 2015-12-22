@@ -1,11 +1,14 @@
 <?php
 
-class Queue {
+class Queue
+{
 
-    public function __construct() {
+    public function __construct()
+    {
     }
 
-    public function add($queueName, $data) {
+    public function add($queueName, $data)
+    {
     }
 
 }

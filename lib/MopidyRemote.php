@@ -60,7 +60,8 @@ class MopidyRemote
         $this->_exec($request);
     }
 
-    public function listTracks() {
+    public function listTracks()
+    {
         $request = $this->_createRequest('core.tracklist.get_tracks');
         $response = $this->_exec($request);
 
@@ -76,7 +77,8 @@ class MopidyRemote
         return implode("\n", $data);
     }
 
-    public function getCurrent() {
+    public function getCurrent()
+    {
         $request = $this->_createRequest('core.playback.get_current_tl_track');
         $response = $this->_exec($request);
 
@@ -85,11 +87,13 @@ class MopidyRemote
 
         return $name;
     }
+
     /**
-    * 
-    */
-    protected function _getTrackName($track) {
-        $name = isset($track['name'])?$track['name']:'Unknown';
+     *
+     */
+    protected function _getTrackName($track)
+    {
+        $name = isset($track['name']) ? $track['name'] : 'Unknown';
         // Add artists info to name
         if (isset($track['artists'])) {
             $artists = [];
@@ -97,11 +101,11 @@ class MopidyRemote
                 $artists[] = $a['name'];
             }
 
-            if (count($artists)>0) {
+            if (count($artists) > 0) {
                 $artistInfo = implode(', ', $artists);
                 $name .= $artistInfo;
             }
-            
+
         }
 
         return $name;
@@ -125,7 +129,7 @@ class MopidyRemote
         curl_setopt($this->_curl, CURLOPT_POSTFIELDS, $paramsStr);
         curl_setopt($this->_curl, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
-            'Content-Length: '.strlen($paramsStr)));
+            'Content-Length: ' . strlen($paramsStr)));
 
         $result = curl_exec($this->_curl);
         file_put_contents('/tmp/slackpi', $result);

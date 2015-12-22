@@ -21,9 +21,9 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
     switch ($text) {
         case 'help':
         case '?':
-            $responseText = "".
-                "- Info: `help`, `?`, `now`, `current`, `list`\n".
-                "- Playback: `next`, `play`, `stop`, `pause`, `resume`\n".
+            $responseText = "" .
+                "- Info: `help`, `?`, `now`, `current`, `list`\n" .
+                "- Playback: `next`, `play`, `stop`, `pause`, `resume`\n" .
                 "- Supported links: ZingMP3, Nhaccuatui";
             break;
         case 'next':
@@ -52,7 +52,7 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
             break;
         case 'current':
         case 'now':
-            $responseText = 'Current track: '. $remote->getCurrent();
+            $responseText = 'Current track: ' . $remote->getCurrent();
             break;
         case 'list':
             $responseText = $remote->listTracks();
@@ -61,19 +61,19 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
             $parserList = ['Zingmp3', 'Nhaccuatui'];
             foreach ($parserList as $parserName) {
                 require_once "lib/Parser/${parserName}.php";
-                $className = "App\\Parser\\"."$parserName";
+                $className = "App\\Parser\\" . "$parserName";
                 $parser = new $className;
                 if ($parser->match($text)) {
-		    $queue = new GearmanClient();
-		    $queue->addServer(); //localhost
-		    $job = $queue->doBackground('getter', json_encode($params));
-/*
-                    $mediaData = $parser->getMedia($text);
-                    $remote->add($mediaData);
+                    $queue = new GearmanClient();
+                    $queue->addServer(); //localhost
+                    $job = $queue->doBackground('getter', json_encode($params));
+                    /*
+                                        $mediaData = $parser->getMedia($text);
+                                        $remote->add($mediaData);
 
-                    $responseText = "@$userName: Đã nhận hàng";
-                    if ($mediaData['title'] != '') $responseText .= ' "'.$mediaData['title'].'" :ok_hand:';
-*/
+                                        $responseText = "@$userName: Đã nhận hàng";
+                                        if ($mediaData['title'] != '') $responseText .= ' "'.$mediaData['title'].'" :ok_hand:';
+                    */
                     break;
                 } else {
                     // Just ignore unkown command
@@ -81,7 +81,7 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
 
             }
     }
-} 
+}
 
 
 if ($responseText != '') {
