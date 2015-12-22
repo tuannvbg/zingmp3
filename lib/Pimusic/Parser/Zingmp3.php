@@ -4,7 +4,7 @@ namespace Pimusic\Parser;
 
 class Zingmp3 extends ParserAbstract
 {
-    const PATTERNS = [
+    protected $PATTERNS = [
         'song'      => 'http:\/\/mp3\.zing\.vn\/bai\-hat\/.*\.html',
         'playlist'  => 'http:\/\/mp3\.zing\.vn\/playlist\/.*\.html',
         'album'     => 'http:\/\/mp3\.zing\.vn\/album\/.*\.html',
@@ -13,7 +13,7 @@ class Zingmp3 extends ParserAbstract
     public function match($text)
     {
         $matches = null;
-        foreach (self::PATTERNS as $key => $pattern) {
+        foreach ($this->PATTERNS as $key => $pattern) {
             $result = preg_match("/$pattern/i", $text, $matches);
             if ($result) {
                 return $matches[0];
@@ -25,7 +25,7 @@ class Zingmp3 extends ParserAbstract
     public function fetch($url)
     {
         $matches = null;
-        foreach (self::PATTERNS as $key => $pattern) {
+        foreach ($this->PATTERNS as $key => $pattern) {
             $result = preg_match("/$pattern/i", $url, $matches);
             if ($result) {
                 $url = $matches[0];
