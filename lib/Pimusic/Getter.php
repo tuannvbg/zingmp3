@@ -59,8 +59,8 @@ class Getter
                 echo "$i. ".$item['title']."\n";
 
 //                $this->_mopidy->add($uris);
-//                $uris[] = $item['path'];
-                $uris[] = $item['url'];
+                $uris[] = "file://".$item['path'];
+                //$uris[] = $item['url'];
             }
 
             print_r($foundItems[0]);
