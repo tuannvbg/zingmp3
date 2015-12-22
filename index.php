@@ -9,6 +9,9 @@ require BASE_PATH . '/vendor/autoload.php';
 require BASE_PATH . '/lib/App.php';
 
 $config = require_once BASE_PATH.'/config.php';
+$localConfig = require_once BASE_PATH.'/config.local.php';
+$config = array_replace_recursive($config, $localConfig);
+
 $app = App::create($config);
 
 $params = $_REQUEST;
@@ -66,28 +69,6 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
             if ($result !== FALSE) {
                 \App::getQueue()->add('getter', ['url' => $result, 'originData' => $params]);
             }
-//            $parserList = ['Zingmp3', 'Nhaccuatui'];
-//            foreach ($parserList as $parserName) {
-//                require_once "lib/Parser/${parserName}.php";
-//                $className = "App\\Parser\\" . "$parserName";
-//                $parser = new $className;
-//                if ($parser->match($text)) {
-//                    $queue = new \GearmanClient();
-//                    $queue->addServer(); //localhost
-//                    $job = $queue->doBackground('getter', json_encode($params));
-//                    /*
-//                                        $mediaData = $parser->getMedia($text);
-//                                        $remote->add($mediaData);
-//
-//                                        $responseText = "@$userName: Đã nhận hàng";
-//                                        if ($mediaData['title'] != '') $responseText .= ' "'.$mediaData['title'].'" :ok_hand:';
-//                    */
-//                    break;
-//                } else {
-//                    // Just ignore unkown command
-//                }
-//
-//            }
     }
 }
 

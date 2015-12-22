@@ -56,12 +56,21 @@ class MopidyRemote
         $this->_exec($this->_createRequest('core.tracklist.clear'));
     }
 
-    public function add($data)
+    public function add($url)
     {
         $request = $this->_createRequest('core.tracklist.add');
-        $request['params'] = [
-            'uri' => $data['url']
-        ];
+        if (is_array($url)) {
+            $request['params'] = [
+                'uris' => $url
+            ];
+
+        }
+        else {
+            $request['params'] = [
+                'uri' => $url
+            ];
+
+        }
         $this->_exec($request);
     }
 

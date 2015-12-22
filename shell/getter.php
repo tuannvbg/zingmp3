@@ -11,6 +11,9 @@ require BASE_PATH . '/vendor/autoload.php';
 require BASE_PATH . '/lib/App.php';
 
 $config = require_once BASE_PATH.'/config.php';
+$localConfig = require_once BASE_PATH.'/config.local.php';
+$config = array_replace_recursive($config, $localConfig);
+
 $app = App::create($config);
 
 $getter = new Pimusic\Getter();

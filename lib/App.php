@@ -40,8 +40,8 @@ class App
         }
 
         $logFile = "$logPath/$file";
-        $h = fopen($logFile, 'w+');
-        fwrite($h, $logFile, $content.PHP_EOL);
+        $h = fopen($logFile, 'a+');
+        fwrite($h, $content.PHP_EOL);
         fclose($h);
     }
 
@@ -77,6 +77,15 @@ class App
 
         $config = self::$_config;
         return new \Pimusic\Queue($config['queue']);
+    }
+
+    /**
+     * @return \Pimusic\Slack
+     */
+    static function getSlack() {
+
+        $config = self::$_config;
+        return new \Pimusic\Slack($config['slack']);
     }
 
 }

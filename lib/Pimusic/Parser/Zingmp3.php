@@ -33,7 +33,6 @@ class Zingmp3 extends ParserAbstract
                     case 'song':
                         return $this->fetchSong($url);
                     case 'album':
-                        return $this->fetchAlbum($url);
                     case 'playlist':
                         return $this->fetchPlaylist($url);
                 }
@@ -41,12 +40,12 @@ class Zingmp3 extends ParserAbstract
             }
         }
 
-        $url = preg_replace('/.*(http:\/\/mp3\.zing\.vn\/bai\-hat\/.*\.html).*/i', "$1", $url);
-
 
     }
 
     public function fetchSong($url) {
+        $foundItems = [];
+
         $downloader = \App::getDownloader();
 
         $page = $downloader->getCacheContent($url, [
@@ -55,6 +54,7 @@ class Zingmp3 extends ParserAbstract
             'gzip' => 1,
         ]);
 
+        // Find XML link in HTML body
         $pattern = 'xmlURL=(http:\/\/mp3\.zing\.vn\/xml\/song\-xml\/[a-zA-Z0-9]+)';
         $matches = [];
         $result = preg_match("/$pattern/", $page, $matches);
@@ -81,28 +81,55 @@ class Zingmp3 extends ParserAbstract
             preg_match("/$pattern/", $page, $matches);
             $artists = trim($matches[1]);
 
-            $path = $downloader->getCachePath($url, [
-                'prefix' => '/media',
-                'suffix' => '.mp3'
-            ]);
+            if ($title != '' && $url != '') {
+                echo "Found song: $title\n";
+                echo "Downloading media $url\n\n";
+                $path = $downloader->getCachePath($url, [
+                    'prefix' => '/media',
+                    'suffix' => '.mp3'
+                ]);
 
-            return [
-                'title' => $title,
-                'artists' => $artists,
-                'url'   => $url,
-                'path'  => $path,
-            ];
-        } else {
-            return FALSE;
+                $foundItems[] = [
+                    'title' => $title,
+                    'artists' => $artists,
+                    'url'   => $url,
+                    'path'  => $path,
+                ];
+
+            }
+
         }
+
+        return $foundItems;
     }
 
     public function fetchPlaylist($url) {
+        $foundItems = [];
+        $downloader = \App::getDownloader();
+
+        $page = $downloader->getCacheContent($url, [
+            'prefix' => '/html',
+            'suffix' => '.html',
+            'gzip' => 1,
+        ]);
+
+        $document = \phpQuery::newDocument($page);
+
+        $matches = $document->find('.item-song a.fn-name');
+        foreach ($matches as $item) {
+
+            $href = pq($item)->attr('href');
+
+            $songItems = $this->fetchSong($href);
+            if (count($songItems)>0)
+                $foundItems[] = $songItems[0];
+        }
+
+        //\phpQuery::unloadDocuments();
+
+        return $foundItems;
 
     }
 
-    public function fetchAlbum($url) {
-
-    }
 
 }

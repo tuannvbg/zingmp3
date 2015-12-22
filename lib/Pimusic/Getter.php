@@ -20,6 +20,11 @@ class Getter
      */
     protected $_mopidy = null;
 
+    /**
+     * @var \Pimusic\Slack
+     */
+    protected $_slack = null;
+
     public function __construct()
     {
         $this->_downloader = \App::getDownloader();
@@ -27,6 +32,8 @@ class Getter
         $this->_mopidy = \App::getMopidy();
 
         $this->_parser = \App::getParser();
+
+        $this->_slack = \App::getSlack();
 
     }
 
@@ -36,13 +43,33 @@ class Getter
         $dataJson = $job->workload();
         $data = json_decode($dataJson, 1);
         $url  = $data['url'];
-        $media = $this->_parser->fetch($url);
 
-        if ($media !== NULL) {
-            var_dump($media);
+        $this->_slack->setRequestData($data['originData']);
+
+        $foundItems = $this->_parser->fetch($url);
+
+        $uris = [];
+
+        if (count($foundItems) > 0) {
+            $count = count($foundItems);
+            echo "Found $count items\n";
+            $i = 0;
+            foreach ($foundItems as $item) {
+                $i++;
+                echo "$i. ".$item['title']."\n";
+
+//                $this->_mopidy->add($uris);
+//                $uris[] = $item['path'];
+                $uris[] = $item['url'];
+            }
+
+            print_r($foundItems[0]);
+
+            $this->_slack->notifySongsAdded($foundItems);
+            $this->_mopidy->add($uris);
         }
         else {
-            echo "Not match!\n";
+            echo "Not found any!\n";
         }
 
 //var_dump($data);

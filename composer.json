@@ -1,5 +1,8 @@
 {
     "autoload": {
         "psr-4": {"Pimusic\\": "lib/Pimusic"}
+    },
+    "require": {
+        "electrolinux/phpquery": "^0.9.6"
     }
 }
