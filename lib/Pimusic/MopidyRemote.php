@@ -1,14 +1,19 @@
 <?php
 
+namespace Pimusic;
+
 class MopidyRemote
 {
 
     protected $_curl;
+    protected $_config;
 
-    public function __construct()
+    public function __construct($config)
     {
+        $this->_config = $config;
+
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://125.234.98.126:6680/mopidy/rpc');
+        curl_setopt($ch, CURLOPT_URL, $this->_config['url']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 
@@ -132,7 +137,8 @@ class MopidyRemote
             'Content-Length: ' . strlen($paramsStr)));
 
         $result = curl_exec($this->_curl);
-        file_put_contents('/tmp/slackpi', $result);
+
+        \App::log($result, 'mopidy_response.log');
         return $result;
     }
 
