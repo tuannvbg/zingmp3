@@ -59,14 +59,18 @@ class Getter
                 echo "$i. ".$item['title']."\n";
 
 //                $this->_mopidy->add($uris);
-                $uris[] = "file://".$item['path'];
-                //$uris[] = $item['url'];
+                $uri = "file://".$item['path'];
+                //$uri = $item['url'];
+
+                $uris[] = $uri;
+
+                $this->_slack->notifySongsAdded([$item]);
+                $this->_mopidy->add($uri);
+
             }
 
             print_r($foundItems[0]);
 
-            $this->_slack->notifySongsAdded($foundItems);
-            $this->_mopidy->add($uris);
         }
         else {
             echo "Not found any!\n";
