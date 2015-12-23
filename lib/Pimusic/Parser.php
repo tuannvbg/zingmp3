@@ -43,9 +43,9 @@ class Parser
         $found = false;
 
         foreach ($this->_plugins as $parser) {
-            $result = $parser->fetch($text);
 
-            if ($result !== FALSE) {
+            $result = $parser->fetch($text);
+            if ($result !== FALSE && $result !== NULL) {
                 return $result;
             }
         }

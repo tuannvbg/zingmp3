@@ -2,52 +2,101 @@
 
 namespace Pimusic\Parser;
 
-require_once 'ParserAbstract.php';
-
 class Nhaccuatui extends ParserAbstract
 {
+    protected $PATTERNS = [
+        'song'      => 'http:\/\/www\.nhaccuatui\.com\/bai\-hat\/.*\.html',
+    ];
 
     public function match($text)
     {
-        $result = strpos($text, 'http://www.nhaccuatui.com/bai-hat/');
-
-        return $result !== FALSE;
+        $matches = null;
+        foreach ($this->PATTERNS as $key => $pattern) {
+            $result = preg_match("/$pattern/i", $text, $matches);
+            if ($result) {
+                return $matches[0];
+            }
+        }
+        return FALSE;
     }
 
-    public function getMedia($url)
+    public function fetch($url)
     {
+        $matches = null;
+        foreach ($this->PATTERNS as $key => $pattern) {
+            $result = preg_match("/$pattern/i", $url, $matches);
+            if ($result) {
+                $url = $matches[0];
+                switch ($key) {
+                    case 'song':
+                        return $this->fetchSong($url);
+                }
+                return false;
+            }
+        }
 
-        $url = preg_replace('/.*(http:\/\/www\.nhaccuatui\.com\/bai\-hat\/.*\.html).*/i', "$1", $url);
-        $page = $this->getLink($url, $gzip=true);
 
+    }
+
+    public function fetchSong($url) {
+        $foundItems = [];
+
+        $downloader = \App::getDownloader();
+
+        $page = $downloader->getCacheContent($url, [
+            'prefix' => '/html',
+            'suffix' => '.html',
+            'gzip' => 1,
+        ]);
+
+        // Find XML link in HTML body
         $pattern = 'xmlURL\s=\s"([^"]+)"';
         $matches = [];
         $result = preg_match("/$pattern/", $page, $matches);
 
-        //var_dump($matches);
-
         if ($result) {
 
-            $page = $this->getLink($matches[1], $gzip=true);
+            $page = $downloader->getCacheContent(trim($matches[1]), [
+                'prefix' => '/meta',
+                'suffix' => '.xml',
+                'gzip' => 1,
+            ]);
 
             $pattern = '<location>\s*<\!\[\CDATA\[(.*)\]\]>\s*<\/location>';
             preg_match("/$pattern/", $page, $matches);
-
-            $url = $matches[1];
+            $url = trim($matches[1]);
 
             $pattern = '<title>\s*<\!\[\CDATA\[(.*)\]\]>\s*<\/title>';
             preg_match("/$pattern/", $page, $matches);
-            $title = $matches[1];
+            $title = trim($matches[1]);
 
-            return [
-                'title' => $title,
-                'url' => $url
-            ];
-        } else {
-            return FALSE;
+            $pattern = '<creator>\s*<\!\[\CDATA\[(.*)\]\]>\s*<\/creator>';
+            preg_match("/$pattern/", $page, $matches);
+            $artists = trim($matches[1]);
+
+            if ($title != '' && $url != '') {
+                echo "Found song: $title\n";
+                echo "Downloading media $url\n\n";
+                $path = $downloader->getCachePath($url, [
+                    'prefix' => '/media',
+                    'suffix' => '.mp3'
+                ]);
+
+                $foundItems[] = [
+                    'title' => $title,
+                    'artists' => $artists,
+                    'url'   => $url,
+                    'path'  => $path,
+                ];
+
+            }
+
         }
 
+        return $foundItems;
     }
+
+
 
 
 }

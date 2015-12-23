@@ -5,7 +5,7 @@ return [
         'url' => 'http://125.234.98.126:6680/mopidy/rpc',
     ],
     'parser' => [
-        'plugins' => ['Zingmp3'],
+        'plugins' => ['Zingmp3', 'Nhaccuatui'],
     ],
     'queue' => [
 
