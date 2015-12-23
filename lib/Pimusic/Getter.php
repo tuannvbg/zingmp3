@@ -58,20 +58,21 @@ class Getter
                 $i++;
                 echo "$i. ".$item['title']."\n";
 
-//                $this->_mopidy->add($uris);
                 $uri = "file://".$item['path'];
                 //$uri = $item['url'];
 
                 $uris[] = $uri;
 
-                $this->_slack->notifySongsAdded([$item]);
-                $this->_mopidy->add($uri);
+//                $this->_slack->notifySongsAdded([$item]);
+//                $this->_mopidy->add($uri);
 
 		if ($i == 1 && isset($data['originData']['autoplay'])) {
 		    $this->_mopidy->play();
 		}
             }
 
+            $this->_slack->notifySongsAdded($foundItems);
+            $this->_mopidy->add($uris);
             print_r($foundItems[0]);
 
         }

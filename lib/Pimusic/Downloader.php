@@ -50,9 +50,6 @@ class Downloader
         else {
 //            echo "CACHE MISS!\n";
             curl_setopt($this->_curl, CURLOPT_URL, $url);
-//        	if ($gzip) {
-//            	    curl_setopt($this->_curl, CURLOPT_ENCODING, "gzip");
-//        	}
             $content = curl_exec($this->_curl);
 
             // save cache
