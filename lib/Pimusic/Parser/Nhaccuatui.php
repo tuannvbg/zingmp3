@@ -5,7 +5,8 @@ namespace Pimusic\Parser;
 class Nhaccuatui extends ParserAbstract
 {
     protected $PATTERNS = [
-        'song'      => 'http:\/\/www\.nhaccuatui\.com\/bai\-hat\/.*\.html',
+        'song'       => 'http:\/\/www\.nhaccuatui\.com\/bai\-hat\/.*\.html',
+        'playlist'   => 'http:\/\/www\.nhaccuatui\.com\/playlist\/.*\.html',
     ];
 
     public function match($text)
@@ -30,6 +31,8 @@ class Nhaccuatui extends ParserAbstract
                 switch ($key) {
                     case 'song':
                         return $this->fetchSong($url);
+                    case 'playlist':
+                        return $this->fetchPlaylist($url);
                 }
                 return false;
             }
@@ -96,7 +99,32 @@ class Nhaccuatui extends ParserAbstract
         return $foundItems;
     }
 
+    public function fetchPlaylist($url) {
+        $foundItems = [];
+        $downloader = \App::getDownloader();
 
+        $page = $downloader->getCacheContent($url, [
+            'prefix' => '/html',
+            'suffix' => '.html',
+            'gzip' => 1,
+        ]);
 
+        $document = \phpQuery::newDocument($page);
+
+        $matches = $document->find('.item_content a.name_song');
+        foreach ($matches as $item) {
+
+            $href = pq($item)->attr('href');
+
+            $songItems = $this->fetchSong($href);
+            if (count($songItems)>0)
+                $foundItems[] = $songItems[0];
+        }
+
+        //\phpQuery::unloadDocuments();
+
+        return $foundItems;
+
+    }
 
 }
