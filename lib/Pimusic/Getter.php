@@ -67,6 +67,9 @@ class Getter
                 $this->_slack->notifySongsAdded([$item]);
                 $this->_mopidy->add($uri);
 
+		if ($i == 1 && isset($data['originData']['autoplay'])) {
+		    $this->_mopidy->play();
+		}
             }
 
             print_r($foundItems[0]);

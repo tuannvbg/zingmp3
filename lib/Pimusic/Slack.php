@@ -31,6 +31,8 @@ class Slack
 
     public function send($text)
     {
+	if (isset($this->_requestData['silent'])) return ;
+
         $payloadData = ['text' => $text];
         $payloadStr  = json_encode($payloadData);
 
