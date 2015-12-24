@@ -1,7 +1,18 @@
 <phpunit bootstrap="tests/bootstrap.php">
-  <testsuites>
-    <testsuite name="default">
-      <directory>tests</directory>
-    </testsuite>
-  </testsuites>
+
+    <testsuites>
+        <testsuite name="default">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">lib</directory>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-text" target="var/coverage"/>
+    </logging>
 </phpunit>
