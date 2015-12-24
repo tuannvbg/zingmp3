@@ -46,6 +46,8 @@ class Slack
 
         $response = curl_exec($this->_curl);
         \App::log($response, 'slack.log');
+
+        return $response;
     }
 
     public function notifySongsAdded($songList) {

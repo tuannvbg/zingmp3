@@ -25,6 +25,12 @@ class Parser
 
     }
 
+    /**
+     * Check if $text match any of Parser rules (Zingmp3, Nhaccuatui: song, playlist, etc)
+     *
+     * @param $text
+     * @return bool
+     */
     public function match($text) {
         $found = false;
 
@@ -39,6 +45,12 @@ class Parser
         return $found;
     }
 
+    /**
+     * Download meta content and music file
+     *
+     * @param $text
+     * @return bool
+     */
     public function fetch($text) {
         $found = false;
 

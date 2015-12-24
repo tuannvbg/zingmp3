@@ -4,5 +4,8 @@
     },
     "require": {
         "electrolinux/phpquery": "^0.9.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "5.1.*"
     }
 }
