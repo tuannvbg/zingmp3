@@ -82,18 +82,6 @@ class Getter
             echo "Not found any!\n";
         }
 
-//var_dump($data);
-
-//        $this->_parser->parse($text, function($mediaData) use ($this) {
-//            $url = $mediaData['url'];
-//            echo "Found url: $url \n";
-//            $urlCache = $this->_downloader->getCacheUrl($url);
-//            $mediaData['url'] = $urlCache;
-//            var_dump($mediaData);
-////		    echo "Adding to Mopidy\n";
-//            //$this->_mopidy->add($mediaData);
-//
-//        });
 
     }
 }

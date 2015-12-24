@@ -29,6 +29,13 @@ class Downloader
 //        $this->_redis->close();
     }
 
+    /**
+     * Download an url or retrieving from local file cache
+     *
+     * @param $url
+     * @param array $options
+     * @return array
+     */
     public function getCache($url, $options = [])
     {
         $cachePath = $this->_config['cache_path'];
@@ -62,18 +69,38 @@ class Downloader
             ];
     }
 
+    /**
+     * Downloading an URL, returning local file cache's path
+     *
+     * @param $url
+     * @param array $options
+     * @return mixed
+     */
     public function getCachePath($url, $options = [])
     {
         $result = $this->getCache($url, $options);
         return $result['path'];
     }
 
+    /**
+     * Downloading an URL or getting cache version
+     *
+     * @param $url
+     * @param array $options
+     * @return mixed
+     */
     public function getCacheContent($url, $options = [])
     {
         $result = $this->getCache($url, $options);
         return $result['content'];
     }
 
+    /**
+     * Turn URI into file path compatible's style
+     *
+     * @param $url
+     * @return string
+     */
     public function _normalize($url)
     {
         return trim(preg_replace('/[^a-z0-9]+/', '-', $url), '-');
