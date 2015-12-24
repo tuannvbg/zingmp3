@@ -29,9 +29,15 @@ class Slack
         curl_close($this->_curl);
     }
 
+    /**
+     * Send a text to Slack via Incomming webhook
+     *
+     * @param $text
+     * @return mixed|void
+     */
     public function send($text)
     {
-	if (isset($this->_requestData['silent'])) return ;
+    	if (isset($this->_requestData['silent'])) return ;
 
         $payloadData = ['text' => $text];
         $payloadStr  = json_encode($payloadData);
