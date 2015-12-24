@@ -74,7 +74,7 @@ class Downloader
         return $result['content'];
     }
 
-    protected function _normalize($url)
+    public function _normalize($url)
     {
         return trim(preg_replace('/[^a-z0-9]+/', '-', $url), '-');
     }

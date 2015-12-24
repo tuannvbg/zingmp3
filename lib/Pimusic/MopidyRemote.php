@@ -16,6 +16,8 @@ class MopidyRemote
         curl_setopt($ch, CURLOPT_URL, $this->_config['url']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10); //timeout in seconds
 
         $this->_curl = $ch;
 
