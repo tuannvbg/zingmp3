@@ -4,10 +4,19 @@
 class App
 {
 
+    /**
+     * @var Array
+     */
     static protected $_config = null;
+
+    /**
+     * @var App
+     */
     static protected $_instance = null;
 
     /**
+     * Singleton implementation
+     *
      * @return App
      */
     static function getInstance() {
@@ -18,6 +27,30 @@ class App
         return self::$_instance;
     }
 
+    /**
+     * Load config and local config
+     */
+    static function initConfig() {
+        $configPath = BASE_PATH.'/config/main.php';
+        $config = include $configPath;
+
+        // Load local config if only it existed
+        $localConfigPath = BASE_PATH.'/config/local.php';
+        if (file_exists($localConfigPath)) {
+            $localConfig = include $localConfigPath;
+            $config = array_replace_recursive($config, $localConfig);
+        }
+
+        self::$_config = $config;
+
+    }
+
+    /**
+     * Get all config or only entry via its key
+     *
+     * @param null $key
+     * @return Array
+     */
     static function getConfig($key=null) {
         if ($key != null)
             return self::$_config['key'];
@@ -25,14 +58,25 @@ class App
             return self::$_config;
     }
 
-    static function create($config) {
-        self::$_config = $config;
-
+    /**
+     * Main entry point
+     *
+     * @return App
+     */
+    static function create() {
         self::$_instance = self::getInstance();
+
+        self::initConfig();
 
         return self::$_instance;
     }
 
+    /**
+     * Log content to a file in 'log_path' config
+     *
+     * @param $content
+     * @param string $file
+     */
     static function log($content, $file = 'app.log') {
         $logPath = self::$_config['log_path'];
         if (!file_exists($logPath)) {
@@ -46,6 +90,8 @@ class App
     }
 
     /**
+     * Get new Downloader service
+     *
      * @return \Pimusic\Downloader
      */
     static function getDownloader() {
@@ -54,6 +100,8 @@ class App
     }
 
     /**
+     * Get new MopidyRemote service
+     *
      * @return \Pimusic\MopidyRemote
      */
     static function getMopidy() {
@@ -62,6 +110,8 @@ class App
     }
 
     /**
+     * Get new Parser service
+     *
      * @return \Pimusic\Parser
      */
     static function getParser() {
@@ -71,6 +121,8 @@ class App
     }
 
     /**
+     * Get new Queue service
+     *
      * @return \Pimusic\Queue
      */
     static function getQueue() {
@@ -80,6 +132,8 @@ class App
     }
 
     /**
+     * Get new Slack service
+     *
      * @return \Pimusic\Slack
      */
     static function getSlack() {
