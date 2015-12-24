@@ -5,14 +5,19 @@ class App
 {
 
     /**
-     * @var Array
-     */
-    static protected $_config = null;
-
-    /**
      * @var App
      */
     static protected $_instance = null;
+
+    /**
+     * @var array
+     */
+    protected $_config = Array();
+
+    /**
+     * @var array
+     */
+    protected $_eventChain = Array();
 
     /**
      * Singleton implementation
@@ -28,9 +33,29 @@ class App
     }
 
     /**
+     * Main entry point
+     *
+     * @return App
+     */
+    static function create() {
+        self::$_instance = self::getInstance();
+
+        self::$_instance->initConfig();
+
+        return self::$_instance;
+    }
+
+
+    protected function __construct()
+    {
+
+    }
+
+
+    /**
      * Load config and local config
      */
-    static function initConfig() {
+    public function initConfig() {
         $configPath = BASE_PATH.'/config/main.php';
         $config = include $configPath;
 
@@ -41,7 +66,7 @@ class App
             $config = array_replace_recursive($config, $localConfig);
         }
 
-        self::$_config = $config;
+        $this->_config = $config;
 
     }
 
@@ -49,26 +74,15 @@ class App
      * Get all config or only entry via its key
      *
      * @param null $key
-     * @return Array
+     * @param null $defaultValue
+     * @return array
      */
-    static function getConfig($key=null) {
+    static function getConfig($key=null, $defaultValue=null) {
+        $instance = self::getInstance();
         if ($key != null)
-            return self::$_config['key'];
+            return isset($instance->_config[$key])?$instance->_config[$key]:$defaultValue;
         else
-            return self::$_config;
-    }
-
-    /**
-     * Main entry point
-     *
-     * @return App
-     */
-    static function create() {
-        self::$_instance = self::getInstance();
-
-        self::initConfig();
-
-        return self::$_instance;
+            return $instance->_config;
     }
 
     /**
@@ -78,7 +92,8 @@ class App
      * @param string $file
      */
     static function log($content, $file = 'app.log') {
-        $logPath = self::$_config['log_path'];
+        $logPath = self::getConfig('log_path');
+
         if (!file_exists($logPath)) {
             mkdir($logPath, 0777, $recursive=true);
         }
@@ -95,8 +110,7 @@ class App
      * @return \Pimusic\Downloader
      */
     static function getDownloader() {
-        $config = self::$_config;
-        return new \Pimusic\Downloader(['cache_path' => $config['cache_path']]);
+        return new \Pimusic\Downloader(['cache_path' => self::getConfig('cache_path')]);
     }
 
     /**
@@ -105,8 +119,7 @@ class App
      * @return \Pimusic\MopidyRemote
      */
     static function getMopidy() {
-        $config = self::$_config;
-        return new \Pimusic\MopidyRemote( $config['mopidy']);
+        return new \Pimusic\MopidyRemote(self::getConfig('mopidy'));
     }
 
     /**
@@ -115,9 +128,7 @@ class App
      * @return \Pimusic\Parser
      */
     static function getParser() {
-
-        $config = self::$_config;
-        return new \Pimusic\Parser($config['parser']);
+        return new \Pimusic\Parser(self::getConfig('parser'));
     }
 
     /**
@@ -126,9 +137,7 @@ class App
      * @return \Pimusic\Queue
      */
     static function getQueue() {
-
-        $config = self::$_config;
-        return new \Pimusic\Queue($config['queue']);
+        return new \Pimusic\Queue(self::getConfig('queue'));
     }
 
     /**
@@ -137,9 +146,21 @@ class App
      * @return \Pimusic\Slack
      */
     static function getSlack() {
+        return new \Pimusic\Slack(self::getConfig('slack'));
+    }
 
-        $config = self::$_config;
-        return new \Pimusic\Slack($config['slack']);
+    /**
+     * Raise an event, also sending its parameters
+     *
+     * @param $eventName
+     * @param $params
+     */
+    static function dispatchEvent($eventName, $params) {
+        // TODO: check registered event handler
+    }
+
+    static function registerEvent($eventName, $callback) {
+        // TODO: add callback to event chain
     }
 
 }
