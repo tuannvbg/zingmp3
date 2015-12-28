@@ -1,4 +1,6 @@
-# PiMusic
+# SlackPi
+
+A Slack integration with Raspberry Pi to become an on-demand Music Box
 
 ## Preparing
 
