@@ -35,9 +35,12 @@ class AppTest extends PHPUnit_Framework_TestCase
 
         App::dispatchEvent('testEvent', Array('var1' => 1, 'var2' => 2));
 
+
     }
 
     public function sampleEventHandler($params) {
-        var_dump($params);die;
+        $this->assertEquals(1, $params['var1'], 'Param not found');
     }
+
+
 }
