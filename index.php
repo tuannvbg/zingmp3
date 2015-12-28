@@ -8,10 +8,11 @@ $params = $_REQUEST;
 $text = isset($params['text']) ? $params['text'] : '';
 $userName = isset($params['user_name']) ? $params['user_name'] : '';
 
+if ($userName == 'slackbot') die;
+
 $remote = App::getMopidy();
 
 $responseText = '';
-
 
 if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
     switch ($text) {
