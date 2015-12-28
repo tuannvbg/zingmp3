@@ -18,9 +18,10 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
         case 'help':
         case '?':
             $responseText = "" .
-                "- Info: `help`, `?`, `now`, `current`, `list`\n" .
+                "- Info: `help`, `?`, `status`=`ping`=`hey`, `wake up`, `sleep`\n".
+                "- Tracklist: `now`=`current`, `list`\n" .
                 "- Playback: `next`, `play`, `stop`, `pause`, `resume`\n" .
-                "- Supported links: ZingMP3, Nhaccuatui";
+                "- Supported links (song/album/playlist): ZingMP3, Nhaccuatui";
             break;
         case 'next':
             $remote->next();
@@ -53,6 +54,8 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
         case 'list':
             $responseText = $remote->listTracks();
             break;
+        case 'ping':
+        case 'hey':
         case 'status':
             $isRunning = $remote->getServiceStatus();
             $responseText = ($isRunning)?"I'm still alive":":zzz:";
