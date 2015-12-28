@@ -58,7 +58,7 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
         case 'hey':
         case 'status':
             $isRunning = $remote->getServiceStatus();
-            $responseText = ($isRunning)?"I'm still alive":":zzz:";
+            $responseText = ($isRunning)?"Vẫn sống nhăn :grin:":":zzz:";
             break;
         case 'wakeup':
         case 'wake up':
@@ -66,7 +66,7 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
         case 'wake-up':
             $isRunning = $remote->getServiceStatus();
             if ($isRunning)
-                $responseText = "I'm still alive :unamused:";
+                $responseText = "Vẫn tỉnh nãy giờ :unamused:";
             else {
                 $remote->startService();
                 $isRunning = $remote->getServiceStatus();
@@ -76,7 +76,7 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
         case 'sleep':
             $remote->stopService();
             $isRunning = $remote->getServiceStatus();
-            $responseText = ($isRunning)?"I'm still awake :flushed:":":zzz:";
+            $responseText = ($isRunning)?"Ko hiểu sao nhưng vưỡn tỉnh như sáo :flushed:":":zzz:";
             break;
         default:
             $result = \App::getParser()->match($text);
