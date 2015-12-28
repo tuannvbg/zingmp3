@@ -56,6 +56,8 @@ class Downloader
             $content = file_get_contents($path);
         else {
 //            echo "CACHE MISS!\n";
+            \App::dispatchEvent('download_cache_miss', ['url' => $url, 'options' => $options]);
+
             curl_setopt($this->_curl, CURLOPT_URL, $url);
             $content = curl_exec($this->_curl);
 
