@@ -1,0 +1,8 @@
+machine:
+  php:
+    version: 5.4
+dependencies:
+  pre:
+    - pecl install curl
+    - pecl install gearman
+
