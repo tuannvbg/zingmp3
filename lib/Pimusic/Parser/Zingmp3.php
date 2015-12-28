@@ -121,8 +121,15 @@ class Zingmp3 extends ParserAbstract
             $href = pq($item)->attr('href');
 
             $songItems = $this->fetchSong($href);
-            if (count($songItems)>0)
-                $foundItems[] = $songItems[0];
+            if (count($songItems)>0) {
+                $item = $songItems[0];
+                $foundItems[] = $item;
+
+                \App::dispatchEvent('playlist_fetch_song', Array(
+                    'id' => count($foundItems),
+                    'item' => $item,
+                ));
+            }
         }
 
         //\phpQuery::unloadDocuments();
