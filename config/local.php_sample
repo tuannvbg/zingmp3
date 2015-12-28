@@ -2,10 +2,10 @@
 
 return [
     'mopidy' => [
-        'url' => 'http://xxx.xxx.xxx.xxx:6680/mopidy/rpc',
+        'url' => 'http://<mopidy_host>/mopidy/rpc',
     ],
     'slack' => [
-        'webhook_url' => 'https://hooks.slack.com/services/xxx',
+        'webhook_url' => '<slack_url>',
     ],
     'log_path' => '/tmp/pimusic/log',
     'cache_path' => '/tmp/pimusic/cache',
