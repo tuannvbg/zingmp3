@@ -61,9 +61,14 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
         case 'wake up':
         case 'wake_up':
         case 'wake-up':
-            $remote->startService();
             $isRunning = $remote->getServiceStatus();
-            $responseText = ($isRunning)?"I'm still alive":":zzz:";
+            if ($isRunning)
+                $responseText = "I'm still alive";
+            else {
+                $remote->startService();
+                $isRunning = $remote->getServiceStatus();
+                $responseText = ($isRunning)?"I'm alive":":zzz:";
+            }
             break;
         case 'sleep':
             $remote->stopService();
