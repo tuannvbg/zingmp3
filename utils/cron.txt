@@ -1,0 +1,7 @@
+# pimusic - morning
+30 8 * * 1-5 /pidata/www/slackpi/utils/start_mopidy2.sh >> /var/log/cron/pimus$
+30 9 * * 1-5 /etc/init.d/mopidy stop >> /var/log/cron/pimusic.log
+
+# pimusic - afternoon
+30 16 * * 1-5 /pidata/www/slackpi/utils/start_mopidy2.sh >> /var/log/cron/pimu$
+00 22 * * 1-5 /etc/init.d/mopidy stop >> /var/log/cron/pimusic.log
