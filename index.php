@@ -18,10 +18,17 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
         case 'help':
         case '?':
             $responseText = "" .
-                "- Info: `help`, `?`, `status`=`ping`=`hey`, `wake up`, `sleep`\n".
+                "- Info: `help`, `?`, `intro`, `status`=`ping`=`hey`, `wake up`, `sleep`\n".
                 "- Tracklist: `now`=`current`, `list`\n" .
                 "- Playback: `next`, `play`, `stop`, `pause`, `resume`\n" .
                 "- Supported links (song/album/playlist): ZingMP3, Nhaccuatui";
+            break;
+        case 'intro':
+            $responseText = "" .
+                "*SlackPi* được tạo bởi 1 tên lười lết mông tới chỗ Ampli để chuyển bài hát \n" .
+                "Đối tượng sử dung: Same same như hắn \n\n" .
+                "500đ Document <http://docs.tiki.com.vn/display/TECH/PiMusic> \n" .
+                "Code: <https://github.com/tungbi/slackpi> \n";
             break;
         case 'next':
             $remote->next();
