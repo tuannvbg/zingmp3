@@ -1,0 +1,12 @@
+machine:
+  php:
+    version: 5.4.5
+dependencies:
+  pre:
+    - pecl install gearman
+
+checkout:
+  post:
+    - cp ./config/local.php_sample ./config/local.php
+    - sed -i s@\<mopidy_host\>@${MOPIDY_HOST}@g ./config/local.php
+    - sed -i s@\<slack_url\>@${SLACK_URL}@g ./config/local.php
