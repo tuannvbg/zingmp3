@@ -54,8 +54,8 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
             $responseText = $remote->listTracks();
             break;
         case 'status':
-            $remote->getStatus();
-//            $responseText = $remote->listTracks();
+            $isRunning = $remote->getStatus();
+            $responseText = ($isRunning)?"I'm still alive":"ZzzzzzzzzzzZ";
             break;
         default:
             $result = \App::getParser()->match($text);
