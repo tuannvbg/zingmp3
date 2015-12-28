@@ -8,5 +8,5 @@ dependencies:
 checkout:
   post:
     - cp ./config/local.php_sample ./config/local.php
-    - sed -e s/\<mopidy_host\>/${MOPIDY_HOST}/g ./config/local.php > ./config/local.php
-    - sed -e s/\<slack_url\>/${SLACK_URL}/g ./config/local.php > ./config/local.php
+    - sed -e s@\<mopidy_host\>@${MOPIDY_HOST}@g ./config/local.php > ./config/local.php
+    - sed -e s@\<slack_url\>@${SLACK_URL}@g ./config/local.php > ./config/local.php
