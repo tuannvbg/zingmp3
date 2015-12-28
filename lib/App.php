@@ -156,11 +156,37 @@ class App
      * @param $params
      */
     static function dispatchEvent($eventName, $params) {
-        // TODO: check registered event handler
+        $instance = self::getInstance();
+        $eventChains = $instance->_eventChain;
+
+        if (isset($eventChains[$eventName])) {
+            foreach ($eventChains[$eventName] as $handler) {
+                $result = $handler($params);
+
+                // option to break chain
+                if ($result === FALSE) break;
+            }
+        }
+
     }
 
+    /**
+     * Register event handler, via a callback
+     *
+     * @param $eventName
+     * @param $callback
+     */
     static function registerEvent($eventName, $callback) {
-        // TODO: add callback to event chain
+
+        $instance = self::getInstance();
+        $eventChains = $instance->_eventChain;
+
+        if (!isset($eventChains[$eventName]))
+            $eventChains[$eventName] = [];
+
+        $eventChains[$eventName][] = $callback;
+
+        $instance->_eventChain = $eventChains;
     }
 
 }
