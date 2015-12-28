@@ -5,3 +5,7 @@ dependencies:
   pre:
     - pecl install gearman
 
+checkout:
+  post:
+    - cp ./config/local.php_phpunit ./config/local.php
+
