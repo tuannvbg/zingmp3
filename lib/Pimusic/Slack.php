@@ -22,6 +22,11 @@ class Slack
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         $this->_curl = $ch;
+
+        \App::registerEvent('playlist_fetch_song', Array($this, 'notifySongInPlaylistAdd'));
+        \App::registerEvent('playlist_fetch', Array($this, 'notifyPlaylistFetch'));
+        \App::registerEvent('download_cache_miss', Array($this, 'onDownloadCacheMiss'));
+
     }
 
     public function __destruct()
@@ -56,6 +61,21 @@ class Slack
         return $response;
     }
 
+    public function notifySongInPlaylistAdd($params) {
+        $index = $params['id'];
+        $item  = $params['item'];
+
+//        if ($index == 1) {
+//            $this->notifySongsAdded(Array($item));
+//        }
+//        else {
+            $text = "  + :musical_note: " . $item['title'];
+            $this->send($text);
+//        }
+
+        $this->setNotified();
+    }
+
     public function notifySongsAdded($songList) {
         $text = '';
 
@@ -65,15 +85,44 @@ class Slack
         $text .= "Đã nhận hàng :ok_hand:\n\n";
         $titles = [];
         foreach ($songList as $item) {
-            $titles[] = ":musical_note: " . $item['title'];
+            $titles[] = "  + :musical_note: " . $item['title'];
         }
         $text .= implode("\n", $titles);
 
         $this->send($text);
     }
 
+    public function notifyPlaylistFetch($playlist) {
+        $text = '';
+
+        if (isset($this->_requestData['user_name']))
+            $text .= '@'.$this->_requestData['user_name'].': ';
+
+        $text .= "Đã nhận playlist :ok_hand:\n\n";
+        $text .= "  *".$playlist['title']."*";
+        $this->send($text);
+    }
+
+    public function onDownloadCacheMiss($params) {
+        if (isset($this->_requestData['notified_patient']) && $this->_requestData['notified_patient'] == true) {
+        }
+        else {
+            $this->_requestData['notified_patient'] = true;
+            $text = "Be patient...";
+            $this->send($text);
+        }
+    }
+
     public function setRequestData($data) {
         $this->_requestData = $data;
+    }
+
+    public function setNotified() {
+        $this->_requestData['notified'] = true;
+    }
+
+    public function isNotified() {
+        return isset($this->_requestData['notified']) && $this->_requestData['notified'] == true;
     }
 
 }

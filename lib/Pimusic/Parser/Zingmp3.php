@@ -115,6 +115,12 @@ class Zingmp3 extends ParserAbstract
 
         $document = \phpQuery::newDocument($page);
 
+        $metaTitle = $document->find('meta[property="og:title"]');
+        \App::dispatchEvent('playlist_fetch', Array(
+            'title' => $metaTitle->attr("content"),
+        ));
+
+
         $matches = $document->find('.item-song a.fn-name');
         foreach ($matches as $item) {
 
@@ -122,12 +128,12 @@ class Zingmp3 extends ParserAbstract
 
             $songItems = $this->fetchSong($href);
             if (count($songItems)>0) {
-                $item = $songItems[0];
-                $foundItems[] = $item;
+                $songItem = $songItems[0];
+                $foundItems[] = $songItem;
 
                 \App::dispatchEvent('playlist_fetch_song', Array(
                     'id' => count($foundItems),
-                    'item' => $item,
+                    'item' => $songItem,
                 ));
             }
         }

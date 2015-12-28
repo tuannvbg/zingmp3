@@ -111,14 +111,26 @@ class Nhaccuatui extends ParserAbstract
 
         $document = \phpQuery::newDocument($page);
 
-        $matches = $document->find('.item_content a.name_song');
+        $metaTitle = $document->find('meta[property="og:title"]');
+        \App::dispatchEvent('playlist_fetch', Array(
+            'title' => $metaTitle->attr("content"),
+        ));
+
+        $matches = $document->find('.list_song_in_album .item_content a.name_song');
         foreach ($matches as $item) {
 
             $href = pq($item)->attr('href');
 
             $songItems = $this->fetchSong($href);
-            if (count($songItems)>0)
-                $foundItems[] = $songItems[0];
+            if (count($songItems)>0) {
+                $songItem = $songItems[0];
+                $foundItems[] = $songItem;
+
+                \App::dispatchEvent('playlist_fetch_song', Array(
+                    'id' => count($foundItems),
+                    'item' => $songItem,
+                ));
+            }
         }
 
         //\phpQuery::unloadDocuments();

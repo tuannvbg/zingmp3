@@ -35,6 +35,7 @@ class Getter
 
         $this->_slack = \App::getSlack();
 
+
     }
 
     public function work($job)
@@ -68,7 +69,9 @@ class Getter
 
             }
 
-            $this->_slack->notifySongsAdded($foundItems);
+            if (!$this->_slack->isNotified())
+                $this->_slack->notifySongsAdded($foundItems);
+
             $this->_mopidy->add($uris);
 
             if (isset($data['originData']['autoplay'])) {
