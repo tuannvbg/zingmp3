@@ -18,17 +18,23 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
         case 'help':
         case '?':
             $responseText = "" .
-                "- Info: `help`, `?`, `intro`, `status`=`ping`=`hey`, `wake up`, `sleep`\n".
-                "- Tracklist: `now`=`current`, `list`\n" .
+                "- Info: `?`, `intro`, `status`, `wake up`, `sleep`\n".
+                "- Tracklist: `current`, `list`\n" .
                 "- Playback: `next`, `play`, `stop`, `pause`, `resume`\n" .
-                "- Supported links (song/album/playlist): ZingMP3, Nhaccuatui";
+                "- Supported links từ *ZingMP3*, *Nhaccuatui*. Site khác không quan tâm\n" . 
+		"    Format: song, album, playlist (public hoặc cá nhân) \n".
+		"    Ví dụ: \n".
+		"    http://mp3.zing.vn/bai-hat/Minh-Yeu-Tu-Bao-Gio-Em-La-Ba-Noi-Cua-Anh-OST-Miu-Le/ZW7WFEIW.html";
             break;
         case 'intro':
             $responseText = "" .
-                "*SlackPi* được tạo bởi 1 tên lười lết mông tới chỗ Ampli để chuyển bài hát \n" .
-                "Đối tượng sử dung: Same same như hắn \n\n" .
-                "500đ Document <http://docs.tiki.com.vn/display/TECH/PiMusic> \n" .
-                "Code: <https://github.com/tungbi/slackpi> \n";
+                "*SlackPi* là tool giúp nghe nhạc theo yêu cầu\n" .
+		"và được tạo bởi 1 tên lười lết mông tới chỗ Ampli để chuyển bài hát \n" .
+                "Đối tượng sử dụng: Thích nghe nhạc và độ lười trên trung bình \n\n" .
+		"Tự mở từ 8h30-9h30 a.m, 4h30-10h p.m hàng ngày trừ T7,CN\n\n".
+                "500đ document: <http://docs.tiki.com.vn/display/TECH/PiMusic> \n" .
+                "Code: <https://github.com/tungbi/slackpi> \n".
+		"Anh em sửa, Pull Request thoải mái";
             break;
         case 'next':
             $remote->next();
