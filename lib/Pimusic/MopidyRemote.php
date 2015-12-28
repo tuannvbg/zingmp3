@@ -153,11 +153,20 @@ class MopidyRemote
         return $result;
     }
 
-    public function getStatus() {
+    public function getServiceStatus() {
         $return = shell_exec('service mopidy status');
         return strpos($return, 'mopidy is running') !== FALSE;
     }
 
+    public function startService() {
+        shell_exec('service mopidy start');
+        sleep(1);
+    }
+
+    public function stopService() {
+        shell_exec('service mopidy stop');
+        sleep(1);
+    }
 
 }
 

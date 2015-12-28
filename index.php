@@ -54,8 +54,21 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
             $responseText = $remote->listTracks();
             break;
         case 'status':
-            $isRunning = $remote->getStatus();
-            $responseText = ($isRunning)?"I'm still alive":"ZzzzzzzzzzzZ";
+            $isRunning = $remote->getServiceStatus();
+            $responseText = ($isRunning)?"I'm still alive":":zzz:";
+            break;
+        case 'wakeup':
+        case 'wake up':
+        case 'wake_up':
+        case 'wake-up':
+            $remote->startService();
+            $isRunning = $remote->getServiceStatus();
+            $responseText = ($isRunning)?"I'm still alive":":zzz:";
+            break;
+        case 'sleep':
+            $remote->stopService();
+            $isRunning = $remote->getServiceStatus();
+            $responseText = ($isRunning)?"I'm still alive":":zzz:";
             break;
         default:
             $result = \App::getParser()->match($text);
