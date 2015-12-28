@@ -3,6 +3,5 @@ machine:
     version: 5.4.5
 dependencies:
   pre:
-    - pecl install curl
     - pecl install gearman
 
