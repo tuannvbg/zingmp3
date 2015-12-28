@@ -66,17 +66,17 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
         case 'wake-up':
             $isRunning = $remote->getServiceStatus();
             if ($isRunning)
-                $responseText = "I'm still alive";
+                $responseText = "I'm still alive :unamused:";
             else {
                 $remote->startService();
                 $isRunning = $remote->getServiceStatus();
-                $responseText = ($isRunning)?"I'm alive":":zzz:";
+                $responseText = ($isRunning)?"Hế nhô :kissing_smiling_eyes:":":zzz:";
             }
             break;
         case 'sleep':
             $remote->stopService();
             $isRunning = $remote->getServiceStatus();
-            $responseText = ($isRunning)?"I'm still alive":":zzz:";
+            $responseText = ($isRunning)?"I'm still awake :flushed:":":zzz:";
             break;
         default:
             $result = \App::getParser()->match($text);
