@@ -153,6 +153,11 @@ class MopidyRemote
         return $result;
     }
 
+    public function getStatus() {
+        $return = shell_exec('/etc/init.d/mopidy status');
+        var_dump($return);
+    }
+
 
 }
 

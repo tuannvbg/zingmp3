@@ -53,6 +53,10 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
         case 'list':
             $responseText = $remote->listTracks();
             break;
+        case 'status':
+            $remote->getStatus();
+//            $responseText = $remote->listTracks();
+            break;
         default:
             $result = \App::getParser()->match($text);
 
