@@ -38,9 +38,23 @@ class MopidyRemote
         $this->_exec($this->_createRequest('core.playback.next'));
     }
 
-    public function play()
+    public function previous()
     {
-        $this->_exec($this->_createRequest('core.playback.play'));
+        $this->_exec($this->_createRequest('core.playback.previous'));
+    }
+
+    /**
+     *
+     * @param null|array $track
+     */
+    public function play($track = null)
+    {
+        $request = $this->_createRequest('core.playback.play');
+        if ($track == null)
+            $this->_exec($request);
+        else {
+            $request['params']['tl_track'] = $track;
+        }
     }
 
     public function resume()
@@ -52,6 +66,14 @@ class MopidyRemote
     {
         $this->_exec($this->_createRequest('core.playback.pause'));
     }
+
+    public function isPlaying()
+    {
+        $response = $this->_exec($this->_createRequest('core.playback.get_state'));
+        $responseData = json_decode($response, 1);
+        return (isset($responseData['result'])) && $responseData['result'] == 'playing';
+    }
+
 
     public function clear()
     {
@@ -65,7 +87,6 @@ class MopidyRemote
             $request['params'] = [
                 'uris' => $url
             ];
-
         }
         else {
             $request['params'] = [
@@ -73,7 +94,13 @@ class MopidyRemote
             ];
 
         }
-        $this->_exec($request);
+        $response = $this->_exec($request);
+
+        if (!$this->isPlaying()) {
+            $responseData = json_decode($response, 1);
+            $item = $responseData['result'][0];
+            $this->play($item);
+        }
     }
 
     public function listTracks()

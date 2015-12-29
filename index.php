@@ -41,6 +41,11 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
             $remote->next();
             $responseText = 'Neeeeeeeeeext';
             break;
+        case 'prev':
+        case 'back':
+            $remote->previous();
+            $responseText = 'Ok!';
+            break;
         case 'play':
             $remote->play();
             $responseText = 'Ok!';
@@ -63,7 +68,10 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
             break;
         case 'current':
         case 'now':
-            $responseText = 'Current track: ' . $remote->getCurrent();
+            if (!$remote->isPlaying())
+                $responseText = 'Not playing';
+            else
+                $responseText = 'Current track: ' . $remote->getCurrent();
             break;
         case 'list':
             $tracks = $remote->listTracks();
