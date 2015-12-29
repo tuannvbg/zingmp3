@@ -50,11 +50,8 @@ class MopidyRemote
     public function play($track = null)
     {
         $request = $this->_createRequest('core.playback.play');
-        if ($track == null)
-            $this->_exec($request);
-        else {
-            $request['params']['tl_track'] = $track;
-        }
+        $request['params']['tl_track'] = $track;
+        $this->_exec($request);
     }
 
     public function resume()
