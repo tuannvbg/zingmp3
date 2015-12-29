@@ -69,7 +69,7 @@ class Slack
 //            $this->notifySongsAdded(Array($item));
 //        }
 //        else {
-            $text = "  + :musical_note: " . $item['title'];
+            $text = "  :musical_note: " . $item['title'];
             $this->send($text);
 //        }
 
