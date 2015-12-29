@@ -10,4 +10,9 @@ checkout:
     - cp ./config/local.php_sample ./config/local.php
     - sed -i s@\<mopidy_host\>@${MOPIDY_HOST}@g ./config/local.php
     - sed -i s@\<slack_url\>@${SLACK_URL}@g ./config/local.php
-    - ssh root@125.234.98.126 -p 6682 'cd /pidata/www/slackpi && git pull && supervisorctl restart pimusic_getter:*'
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - ssh root@125.234.98.126 -p 6682 'cd /pidata/www/slackpi && git pull && supervisorctl restart pimusic_getter:*'
