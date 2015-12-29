@@ -5,8 +5,8 @@ namespace Pimusic\Parser;
 class Nhaccuatui extends ParserAbstract
 {
     protected $PATTERNS = [
-        'song'       => 'http:\/\/www\.nhaccuatui\.com\/bai\-hat\/.*\.html',
-        'playlist'   => 'http:\/\/www\.nhaccuatui\.com\/playlist\/.*\.html',
+        'song'       => '(http|https):\/\/(www\.)?nhaccuatui\.com\/bai\-hat\/.*\.html',
+        'playlist'   => '(http|https):\/\/(www\.)?nhaccuatui\.com\/playlist\/.*\.html',
     ];
 
     public function match($text)
@@ -14,11 +14,13 @@ class Nhaccuatui extends ParserAbstract
         $matches = null;
         foreach ($this->PATTERNS as $key => $pattern) {
             $result = preg_match("/$pattern/i", $text, $matches);
+//            print_r($matches);die;
             if ($result) {
                 return $matches[0];
             }
         }
         return FALSE;
+
     }
 
     public function fetch($url)
