@@ -17,7 +17,3 @@ deployment:
     commands:
       - ssh root@${DEPLOY_HOST} -p 6682 'cd /pidata/www/slackpi && git pull && supervisorctl restart pimusic_getter:*'
 
-notify:
-  webhooks:
-    # A list of hook hashes, containing the URL field
-    - url: https://hooks.slack.com/services/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
