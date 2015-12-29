@@ -125,4 +125,21 @@ class Slack
         return isset($this->_requestData['notified']) && $this->_requestData['notified'] == true;
     }
 
+    public function showTrackList($list) {
+        if (count($list)<=0) return ;
+
+        $line = [];
+        $i = 0;
+        foreach ($list as $item) {
+            $i++;
+            $name = $item['name'];
+            if (isset($item['isActive']) && $item['isActive'])
+                $line[] = "*$i. $name* :arrow_forward:";
+            else
+                $line[] = "$i. $name";
+        }
+
+        $this->send(implode("\n", $line));
+    }
+
 }

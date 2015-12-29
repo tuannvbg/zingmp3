@@ -78,29 +78,45 @@ class MopidyRemote
 
     public function listTracks()
     {
-        $request = $this->_createRequest('core.tracklist.get_tracks');
+
+        // Get current track in order to mark active track
+        $request = $this->_createRequest('core.playback.get_current_tl_track');
+        $response = $this->_exec($request);
+        $responseData = json_decode($response, 1);
+        $result = $responseData['result'];
+        $currentTrackId = null;
+        if ($result != '' && isset($result['tlid'])) {
+            $currentTrackId = $result['tlid'];
+        }
+
+
+        $request = $this->_createRequest('core.tracklist.get_tl_tracks');
         $response = $this->_exec($request);
 
         $responseData = json_decode($response, 1);
 
-        $responseText = "";
         $data = [];
         foreach ($responseData['result'] as $item) {
-            $name = $this->_getTrackName($item);
-            $data[] = $name;
+//            print_r($item);die;
+            $trackId   = $item['tlid'];
+            $trackItem = $item['track'];
+            $name = $this->_getTrackName($trackItem);
+            $dataItem = ['name' => $name, 'tlid' => $trackId];
+            if ($trackId == $currentTrackId)
+                $dataItem['isActive'] = 1;
+
+            $data[] = $dataItem;
         }
 
-        return implode("\n", $data);
+        return $data;
     }
 
     public function getCurrent()
     {
         $request = $this->_createRequest('core.playback.get_current_tl_track');
         $response = $this->_exec($request);
-
         $responseData = json_decode($response, 1);
         $name = $this->_getTrackName($responseData['result']['track']);
-
         return $name;
     }
 
@@ -119,7 +135,7 @@ class MopidyRemote
 
             if (count($artists) > 0) {
                 $artistInfo = implode(', ', $artists);
-                $name .= $artistInfo;
+                $name .= ' - '. $artistInfo;
             }
 
         }

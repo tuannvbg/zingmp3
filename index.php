@@ -66,7 +66,8 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
             $responseText = 'Current track: ' . $remote->getCurrent();
             break;
         case 'list':
-            $responseText = $remote->listTracks();
+            $tracks = $remote->listTracks();
+            \App::getSlack()->showTrackList($tracks);
             break;
         case 'ping':
         case 'hey':
