@@ -85,7 +85,7 @@ class Slack
         $text .= "Đã nhận hàng :ok_hand:\n\n";
         $titles = [];
         foreach ($songList as $item) {
-            $titles[] = "  + :musical_note: " . $item['title'];
+            $titles[] = "  :musical_note: " . $item['title'];
         }
         $text .= implode("\n", $titles);
 
@@ -98,8 +98,8 @@ class Slack
         if (isset($this->_requestData['user_name']))
             $text .= '@'.$this->_requestData['user_name'].': ';
 
-        $text .= "Đã nhận playlist :ok_hand:\n\n";
-        $text .= "  *".$playlist['title']."*";
+        $text .= "Đã nhận hàng :ok_hand:\n\n";
+        $text .= "  Playlist/Album: *".$playlist['title']."*";
         $this->send($text);
     }
 
