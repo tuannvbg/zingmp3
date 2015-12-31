@@ -40,8 +40,8 @@ class Downloader
     {
         $cachePath = $this->_config['cache_path'];
 
-        $prefix = isset($options['prefix'])?$options['prefix']:'';
-        $suffix = isset($options['suffix'])?$options['suffix']:'';
+        $prefix = isset($options['prefix']) ? $options['prefix'] : '';
+        $suffix = isset($options['suffix']) ? $options['suffix'] : '';
 
         $path = $cachePath . $prefix;
         if (!file_exists($path)) {
@@ -68,7 +68,25 @@ class Downloader
         return [
             'content' => $content,
             'path' => $path,
-            ];
+        ];
+    }
+
+    /**
+     * Download an url or retrieving from local file cache
+     *
+     * @param $url
+     * @param array $options
+     * @return array
+     */
+    public function getContent($url, $options = [])
+    {
+        \App::dispatchEvent('download_cache_miss', ['url' => $url, 'options' => $options]);
+
+        curl_setopt($this->_curl, CURLOPT_URL, $url);
+        $content = curl_exec($this->_curl);
+
+        return $content;
+
     }
 
     /**

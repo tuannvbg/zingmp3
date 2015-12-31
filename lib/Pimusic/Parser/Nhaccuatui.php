@@ -105,11 +105,7 @@ class Nhaccuatui extends ParserAbstract
         $foundItems = [];
         $downloader = \App::getDownloader();
 
-        $page = $downloader->getCacheContent($url, [
-            'prefix' => '/html',
-            'suffix' => '.html',
-            'gzip' => 1,
-        ]);
+        $page = $downloader->getContent($url);
 
         $document = \phpQuery::newDocument($page);
 
