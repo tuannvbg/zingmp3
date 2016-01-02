@@ -1,0 +1,34 @@
+---
+
+# insert nameserver dns
+#
+- name: insert nameserver /etc/resolv.conf
+  lineinfile: dest=/etc/resolv.conf state=present regexp='nameserver 8.8.8.8' line='nameserver 8.8.8.8'
+
+- name: "Install utils: vim, wget, telnet, htop, ntpdate"
+  apt: pkg={{item}} state=installed
+  with_items:
+    - vim
+    - wget
+    - htop
+    - ntpdate
+    - telnet
+
+- name: update timezone HCM
+  command: timedatectl set-timezone Asia/Ho_Chi_Minh
+
+# - name: update time system
+#  command: ntpdate pool.ntp.org
+
+- name: Detect locale problem
+  lineinfile: dest=/etc/locale.gen state=present 
+    regexp='^ en_US.UTF-8 UTF-8'
+    insertafter='^# en_US.UTF-8 UTF-8'
+    line=' en_US.UTF-8 UTF-8'
+  register: fix_locale
+  tags: debug
+
+- name: Fix locale problem
+  command: locale-gen en_US.UTF-8 && update-locale en_US.UTF-8
+  when: fix_locale.changed
+  tags: debug
