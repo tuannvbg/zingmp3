@@ -15,5 +15,5 @@ deployment:
   production:
     branch: master
     commands:
-      - ssh root@${DEPLOY_HOST} -p 6682 'cd /pidata/www/slackpi && git pull && supervisorctl restart pimusic_getter:*'
+      - ssh root@${DEPLOY_HOST} -p ${DEPLOY_PORT} 'cd /pidata/www/slackpi && git pull && supervisorctl restart pimusic_getter:*'
 
