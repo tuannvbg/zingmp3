@@ -194,8 +194,8 @@ class MopidyRemote
     }
 
     public function getServiceStatus() {
-        $return = shell_exec('service mopidy status');
-        return strpos($return, 'mopidy is running') !== FALSE;
+        $return = shell_exec('service mopidy status | head -n 3 | tail -n 1');
+        return strpos($return, 'active (running)') !== FALSE;
     }
 
     public function startService() {
