@@ -199,12 +199,12 @@ class MopidyRemote
     }
 
     public function startService() {
-        shell_exec('sudo service mopidy start');
+        shell_exec('sudo /etc/init.d/mopidy start');
         sleep(1);
     }
 
     public function stopService() {
-        shell_exec('sudo service mopidy stop');
+        shell_exec('sudo /etc/init.d/mopidy stop');
         sleep(1);
     }
 
