@@ -75,7 +75,7 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
             break;
         case 'list':
             $tracks = $remote->listTracks();
-            \App::getSlack()->showTrackList($tracks);
+            $responseText = \App::getSlack()->getTrackList($tracks);
             break;
         case 'ping':
         case 'hey':
