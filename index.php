@@ -101,6 +101,10 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
             $isRunning = $remote->getServiceStatus();
             $responseText = ($isRunning) ? "Ko hiểu sao nhưng vưỡn tỉnh như sáo :flushed:" : ":zzz:";
             break;
+        case 'restart':
+            $remote->restartService();
+            $responseText = "Restarted";
+            break;
         default:
             $result = \App::getParser()->match($text);
 

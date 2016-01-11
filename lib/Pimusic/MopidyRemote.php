@@ -113,7 +113,7 @@ class MopidyRemote
             $currentTrackId = $result['tlid'];
         }
 
-
+        // get all tracks
         $request = $this->_createRequest('core.tracklist.get_tl_tracks');
         $response = $this->_exec($request);
 
@@ -205,6 +205,12 @@ class MopidyRemote
 
     public function stopService() {
         shell_exec('sudo /etc/init.d/mopidy stop');
+        sleep(1);
+    }
+
+    public function restartService() {
+        shell_exec('sudo /etc/init.d/mopidy restart');
+        shell_exec('sudo /usr/bin/supervisorctl restart all');
         sleep(1);
     }
 
