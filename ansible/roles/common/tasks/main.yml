@@ -41,7 +41,8 @@
       - restart syslog
 
 - name: Update wifi config
-  copy: src=wpa_supplicant.conf  dest=/etc/wpa_supplicant/wpa_supplicant.conf
+  copy: src=config/wpa_supplicant.conf  dest=/etc/wpa_supplicant/wpa_supplicant.conf
+  tags: config
   notify:
       - restart wifi
 
@@ -61,9 +62,9 @@
 - name: Disable ipv6 to avoid some sevices donot listen on ::1
   lineinfile: "dest=/etc/hosts regexp='^#?::1' line='#::1 localhost ip6-localhost ip6-loopback' state=present"
 
-- cron: make cron log dir
+- name: make cron log dir
   file: path=/var/log/cron state=directory
-  
+
 #- name: Set keyboard layout (require X env)
 #  command: setxkbmap -layout us -variant mac
 
