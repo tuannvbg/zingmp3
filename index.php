@@ -15,7 +15,7 @@ $remote = App::getMopidy();
 $responseText = '';
 
 if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
-    switch ($text) {
+    switch (strtolower($text)) {
         case 'help':
         case '?':
             $responseText = "" .
