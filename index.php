@@ -110,7 +110,21 @@ if ($text != '' && strpos($text, BOT_PREFIX) !== 0) {
 
             if ($result !== FALSE) {
                 \App::getQueue()->add('getter', ['url' => $result, 'originData' => $params]);
+            } else if ($text != '' && isset($params['chatbot'])) {
+                require_once('chatbot/simsimi_api_class.php');
+
+                $obj = new SimSimiAPI();
+                $responseText = '';
+                try {
+                    $result = $obj->simSimiConversation('vn', '1.0', $text);
+                    $responseText = $result['response'];
+                    $responseText = str_ireplace(['simsimi', 'simi', 'sim', 'gà chip', 'tao'], 'em', $responseText);
+
+                } catch (Exception $e) {
+                    file_put_contents('/tmp/chat_error.log', $e->getMessage());
+                }
             }
+
     }
 }
 
