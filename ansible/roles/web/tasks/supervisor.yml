@@ -1,0 +1,19 @@
+- name: Install Supervisor (worker manager)
+  apt: pkg={{ item }} state=installed
+  with_items:
+        - supervisor
+
+- name: be sure supervisor is running and enabled
+  service: name=supervisor state=running enabled=yes
+
+- name: Copy Supervisor configuration to servers
+  copy: src=supervisor/ dest=/etc/supervisor/conf.d/
+  notify: update supervisor
+
+- name: Install Gearman (queue)
+  apt: pkg={{ item }} state=installed
+  with_items:
+        - gearman
+
+- name: be sure gearman is running and enabled
+  service: name=gearman-job-server state=running enabled=yes

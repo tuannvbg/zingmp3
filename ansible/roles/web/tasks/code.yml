@@ -1,0 +1,37 @@
+- name: Make sure Git is present
+  apt: pkg=git state=installed
+
+- name: "Checkout source code"
+  git: repo=git@github.com:tungbi/slackpi.git
+       dest=/pidata/www/slackpi
+       accept_hostkey=yes
+
+- name: Copy configuration to servers
+  copy: src=code/local.php_test dest=/pidata/www/slackpi/config/local.php
+
+- name: install composer
+  shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  args:
+    creates: /usr/local/bin/composer
+
+- composer: command=install working_dir=/pidata/www/slackpi/
+
+- name: IP notifier - onboot
+  lineinfile: 
+    dest: /etc/rc.local
+    state: present
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"  
+    insertbefore: '^exit 0'
+  with_items:
+    - { regexp: '^# IP notifier', line: '# IP notifier' }
+    - { regexp: '^/pidata/www/slackpi/utils/noti_ip/noti_ip.sh', line: '/pidata/www/slackpi/utils/noti_ip/noti_ip.sh' }
+
+- name: Add circle-ci key
+  authorized_key: user=root key="{{ lookup('file', 'ssh/circle-ci.pub') }}" state=present
+
+# TODO: edit visudo for mopidy service controlling
+#  1. backup /etc/sudoers for safety
+#     command: cp -f /etc/sudoers /etc/sudoers.tmp
+#  2. Add this line:
+#     www-data ALL=(root) NOPASSWD: /etc/init.d/mopidy

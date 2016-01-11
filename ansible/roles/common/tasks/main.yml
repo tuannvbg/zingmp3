@@ -13,6 +13,7 @@
     - htop
     - ntpdate
     - telnet
+    - git
 
 - name: update timezone HCM
   command: timedatectl set-timezone Asia/Ho_Chi_Minh
@@ -26,9 +27,43 @@
     insertafter='^# en_US.UTF-8 UTF-8'
     line=' en_US.UTF-8 UTF-8'
   register: fix_locale
-  tags: debug
 
 - name: Fix locale problem
   command: locale-gen en_US.UTF-8 && update-locale en_US.UTF-8
   when: fix_locale.changed
-  tags: debug
+
+- name: Make sure cron log is working (turn off by default)
+  lineinfile: dest=/etc/rsyslog.conf state=present 
+    regexp='^cron\.\*'
+    insertafter='^#cron\.\*'
+    line='cron.*                         /var/log/cron.log'
+  notify:
+      - restart syslog
+
+- name: Update wifi config
+  copy: src=wpa_supplicant.conf  dest=/etc/wpa_supplicant/wpa_supplicant.conf
+  notify:
+      - restart wifi
+
+- name: Copy git config
+  copy: src=.gitconfig  dest=/root/
+
+- name: Copy bashrc
+  copy: src=.bashrc  dest=/root/
+
+- name: "Copy ssh config"
+  copy: |
+    src=ssh/  dest=/root/.ssh/
+    owner=root
+    group=root
+    mode=0600
+
+- name: Disable ipv6 to avoid some sevices donot listen on ::1
+  lineinfile: "dest=/etc/hosts regexp='^#?::1' line='#::1 localhost ip6-localhost ip6-loopback' state=present"
+
+- cron: make cron log dir
+  file: path=/var/log/cron state=directory
+  
+#- name: Set keyboard layout (require X env)
+#  command: setxkbmap -layout us -variant mac
+

@@ -1,0 +1,16 @@
+---
+# Main playbook
+- name: Deploy code on Pi
+  hosts: pi
+  remote_user: root
+
+  tasks:
+  - name: Get latest code
+    git: repo=git@github.com:tungbi/slackpi.git
+         dest=/pidata/www/slackpi
+         accept_hostkey=yes
+    register: deploy
+
+  - name: Restart workers
+    shell: supervisorctl restart all
+    when: deploy.changed

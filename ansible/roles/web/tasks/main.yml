@@ -1,0 +1,15 @@
+---
+
+- include: nginx.yml
+  tags: nginx
+
+- include: php.yml
+  tags: php
+
+- include: code.yml
+  tags: code
+
+- include: supervisor.yml
+  tags: 
+   - supervisor
+   - worker

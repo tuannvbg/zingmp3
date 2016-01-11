@@ -1,0 +1,70 @@
+---
+
+- name: Import GPG key for Mopidy
+  apt_key: state=present url=https://apt.mopidy.com/mopidy.gpg
+
+- name: Add Mopidy repository into apt list.
+  apt_repository: repo='deb http://apt.mopidy.com/ jessie main contrib non-free' state=present
+
+- name: Enable ipv6
+  modprobe: name=ipv6 state=present
+
+- name: Make ipv6 run on boot
+  lineinfile: dest=/etc/modules state=present regexp='ipv6' line='ipv6'
+
+- name: Make sure Audio go through analog instead of HDMI
+  command: amixer cset numid=3 1
+
+- name: Make sure Audio go through analog instead of HDMI - on boot
+  lineinfile: 
+    dest: /etc/rc.local
+    state: present
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"  
+    insertbefore: '^exit 0'
+  with_items:
+    - { regexp: '^# Set Audio output to Analog', line: '# Set Audio output to Analog' }
+    - { regexp: '^amixer cset numid=3 1', line: 'amixer cset numid=3 1' }
+
+- name: Copy asound configuration (fix some problems for HDMI and analog)
+  copy: src=asound.conf dest=/etc/asound.conf
+
+- name: "Install Pre-required packages"
+  apt: pkg={{item}} state=installed
+  with_items:
+    - gstreamer1.0-alsa
+    - gstreamer0.10-plugins-bad
+
+- name: "Install Mopidy"
+  apt: pkg={{item}} state=installed
+  with_items:
+    - mopidy
+    - mopidy-alsamixer
+    - mopidy-doc
+    - mopidy-soundcloud
+    - mopidy-podcast-itunes
+    - mopidy-youtube
+    - mopidy-spotify
+    - mopidy-spotify-tunigo
+  notify:
+    - restart mopidy
+
+- name: Install Mopidy Web Extensions
+  pip: name={{item}} state=present
+  with_items:
+    - Mopidy-API-Explorer
+    - Mopidy-Mobile
+
+- name: Copy mopidy config
+  copy: src=mopidy.conf dest=/etc/mopidy/
+  notify:
+    - restart mopidy
+
+- name: Copy sample music
+  copy: src=samples/ dest=/var/lib/mopidy/media/
+
+- name: Rescan local files
+  command: mopidyctl local scan
+
+- name: be sure mopidy is running and enabled
+  service: name=mopidy state=running enabled=yes

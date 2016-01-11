@@ -1,0 +1,11 @@
+---
+- name: Install php-fpm and deps 
+  apt: pkg={{ item }} state=installed
+  with_items:
+        - php5-fpm
+        - php5-dev
+        - php5-curl
+        - php5-gearman
+
+- name: be sure php-fpm is running and enabled
+  service: name=php5-fpm state=running enabled=yes

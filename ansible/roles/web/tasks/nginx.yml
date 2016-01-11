@@ -1,0 +1,16 @@
+---
+
+- name: Install nginx
+  apt: pkg={{item}} state=installed
+  with_items:
+    - nginx
+
+- name: Copy nginx vhosts
+  synchronize: src=nginx/vhosts/ dest=/etc/nginx/sites-available/
+
+- name: Symlink enabled vhosts
+  file: src=/etc/nginx/sites-available/slackpi dest=/etc/nginx/sites-enabled/slackpi state=link
+  notify: restart nginx
+
+- name: be sure nginx is running and enabled
+  service: name=nginx state=running enabled=yes

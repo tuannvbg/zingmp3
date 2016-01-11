@@ -1,0 +1,8 @@
+---
+# Main playbook
+- name: Install Chrome on Pi
+  hosts: pi
+  remote_user: root
+
+  roles:
+        - { role: chrome, tags: [ 'chrome' ] }
