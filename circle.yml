@@ -14,7 +14,7 @@ checkout:
     - cp ./config/local.php_sample ./config/local.php
     - sed -i s@\<mopidy_host\>@${MOPIDY_HOST}@g ./config/local.php
     - sed -i s@\<slack_url\>@${SLACK_URL}@g ./config/local.php
-    - echo $DEPLOY_HOSTS | perl -pe 's/^/\[pi\]\n/g' | perl -pe 's/,\s+?/\n/g' | perl -pe 's/^([0-9])/root\@$1/g' > ./ansible/config/hosts
+    - php ./ansible/create_host.php $DEPLOY_HOSTS > ./ansible/config/hosts
 deployment:
   production:
     branch: master
