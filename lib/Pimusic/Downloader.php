@@ -20,6 +20,8 @@ class Downloader
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
         curl_setopt($ch, CURLOPT_ENCODING, "gzip");
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0); // 0 = unlimited
+        curl_setopt($ch, CURLOPT_TIMEOUT, 120); // 2min
         $this->_curl = $ch;
     }
 
