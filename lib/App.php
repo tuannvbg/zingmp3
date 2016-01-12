@@ -100,10 +100,10 @@ class App
 
         $logFile = "$logPath/$file";
         $h = fopen($logFile, 'a+');
-	if ($h) {
-          fwrite($h, $content.PHP_EOL);
-          fclose($h);
-	}
+        if ($h) {
+              fwrite($h, $content.PHP_EOL);
+              fclose($h);
+        }
     }
 
     /**
