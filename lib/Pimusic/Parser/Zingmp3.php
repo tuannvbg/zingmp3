@@ -8,6 +8,7 @@ class Zingmp3 extends ParserAbstract
         'song'      => 'http:\/\/mp3\.zing\.vn\/bai\-hat\/.*\.html',
         'playlist'  => 'http:\/\/mp3\.zing\.vn\/playlist\/.*\.html',
         'album'     => 'http:\/\/mp3\.zing\.vn\/album\/.*\.html',
+	    'radio'	    => 'http:\/\/radio\.zing\.vn\/.*'
     ];
 
     public function match($text)
@@ -35,6 +36,9 @@ class Zingmp3 extends ParserAbstract
                     case 'album':
                     case 'playlist':
                         return $this->fetchPlaylist($url);
+		    case 'radio':
+			return $this->fetchRadio($url);	
+		
                 }
                 return false;
             }
@@ -69,34 +73,7 @@ class Zingmp3 extends ParserAbstract
                 'gzip' => 1,
             ]);
 
-            $pattern = '\<source\>\<\!\[CDATA\[(.*)\]\]\>\<\/source\>';
-            preg_match("/$pattern/", $page, $matches);
-            $url = trim($matches[1]);
-
-            $pattern = '\<title\>\<\!\[CDATA\[(.*)\]\]\>\<\/title\>';
-            preg_match("/$pattern/", $page, $matches);
-            $title = trim($matches[1]);
-
-            $pattern = '\<performer\>\<\!\[CDATA\[(.*)\]\]\>\<\/performer\>';
-            preg_match("/$pattern/", $page, $matches);
-            $artists = trim($matches[1]);
-
-            if ($title != '' && $url != '') {
-                echo "Found song: $title\n";
-                echo "Downloading media $url\n\n";
-                $path = $downloader->getCachePath($url, [
-                    'prefix' => '/media',
-                    'suffix' => '.mp3'
-                ]);
-
-                $foundItems[] = [
-                    'title' => $title,
-                    'artists' => $artists,
-                    'url'   => $url,
-                    'path'  => $path,
-                ];
-
-            }
+            $foundItems = $this->getItem($page);
 
         }
 
@@ -136,6 +113,66 @@ class Zingmp3 extends ParserAbstract
 
         return $foundItems;
 
+    }
+
+    public function fetchRadio($url) {
+
+        $foundItems = [];
+        $downloader = \App::getDownloader();
+
+        $page = $downloader->getCacheContent($url, [
+            'prefix' => '/xml',
+            'suffix' => '.xml',
+            'gzip' => 1,
+        ]);
+        $document = \phpQuery::newDocument($page);
+        $matches = $document->find('#fnRadioPlayer5Con');
+        foreach($matches as $item) {
+
+            $href = pq($item)->attr('xml');
+            $page = $downloader->getCacheContent($href, [
+                'prefix' => '/meta',
+                'suffix' => '.xml',
+                'gzip' => 1,
+            ]);
+
+            $foundItems = array_merge($foundItems,$this->getItem($page));
+        }
+        return $foundItems;
+    }
+
+    private function getItem ($page) {
+        $foundItems = [];
+        $downloader = \App::getDownloader();
+        $pattern = '\<source\>\<\!\[CDATA\[(.*)\]\]\>\<\/source\>';
+        preg_match("/$pattern/", $page, $matches);
+        $url = trim($matches[1]);
+
+        $pattern = '\<title\>\<\!\[CDATA\[(.*)\]\]\>\<\/title\>';
+        preg_match("/$pattern/", $page, $matches);
+        $title = trim($matches[1]);
+
+        $pattern = '\<performer\>\<\!\[CDATA\[(.*)\]\]\>\<\/performer\>';
+        preg_match("/$pattern/", $page, $matches);
+        $artists = trim($matches[1]);
+
+        if ($title != '' && $url != '') {
+            echo "Found song: $title\n";
+            echo "Downloading media $url\n\n";
+            $path = $downloader->getCachePath($url, [
+                'prefix' => '/media',
+                'suffix' => '.mp3'
+            ]);
+
+            $foundItems[] = [
+                'title' => $title,
+                'artists' => $artists,
+                'url'   => $url,
+                'path'  => $path,
+            ];
+
+        }
+        return $foundItems;
     }
 
 
