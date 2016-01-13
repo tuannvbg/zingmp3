@@ -15,5 +15,15 @@ class Zingmp3Test extends PHPUnit_Framework_TestCase
 
     }
 
+    public function testFetchRadio() {
+        $parser = new Pimusic\Parser\Zingmp3();
+        $url = "<http://radio.zing.vn/NhacBatHu>";
+        $result = $parser->match($url);
+        $this->assertNotEquals(FALSE, $result, "Matching failed");
+//        $this->assertEquals("http://radio.zing.vn/NhacBatHu",$result,"Removing prefix failed");
+        $items = $parser->fetchRadio($result);
+        $this->assertEquals(79,count($items),"Test pass!!!");
+
+    }
 }
 
