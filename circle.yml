@@ -6,17 +6,17 @@ machine:
 
 dependencies:
   pre:
-    - pecl install gearman
-    - pip install ansible
+    - pecl install mongo
+ #   - pip install ansible
 
-checkout:
-  post:
-    - cp ./config/local.php_sample ./config/local.php
-    - sed -i s@\<mopidy_host\>@${MOPIDY_HOST}@g ./config/local.php
-    - sed -i s@\<slack_url\>@${SLACK_URL}@g ./config/local.php
-    - php ./ansible/create_host.php $DEPLOY_HOSTS > ./ansible/config/hosts
-deployment:
-  production:
-    branch: master
-    commands:
-      - ansible-playbook -i ./ansible/config/hosts ./ansible/deploy.yml
+#checkout:
+#  post:
+#    - cp ./config/local.php_sample ./config/local.php
+#    - sed -i s@\<mopidy_host\>@${MOPIDY_HOST}@g ./config/local.php
+#    - sed -i s@\<slack_url\>@${SLACK_URL}@g ./config/local.php
+#    - php ./ansible/create_host.php $DEPLOY_HOSTS > ./ansible/config/hosts
+#deployment:
+#  production:
+#    branch: master
+#    commands:
+#      - ansible-playbook -i ./ansible/config/hosts ./ansible/deploy.yml
