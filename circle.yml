@@ -6,7 +6,7 @@ machine:
 
 dependencies:
   pre:
-    - pecl install mongo
+    - printf "\n" | pecl install mongo
  #   - pip install ansible
 
 #checkout:
