@@ -5,9 +5,12 @@ machine:
     version: 2.7.10
 
 dependencies:
-  pre:
-    - printf "\n" | pecl install mongo
+ # pre:
+ #   - printf "\n" | pecl install mongo
  #   - pip install ansible
+
+  cache_directories:
+    - ~/.composer/cache
 
 #checkout:
 #  post:
